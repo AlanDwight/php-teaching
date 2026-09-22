@@ -1,0 +1,5 @@
+"Employee ID","Full Name",Department,Role,Salary,"Hire Date",Active
+EMP-1001,"Jane Doe",Engineering,"Senior Developer",115000,2021-03-15,1
+EMP-1002,"Marcus Chen",Marketing,"Growth Lead",92000,2022-07-01,1
+EMP-1003,"Sarah Al-Mansoor",Sales,"Account Executive",88000,2020-11-20,
+EMP-1004,"Liam O'Connor",Product,"Product Manager",108000,2023-01-10,1

@@ -1,0 +1,38 @@
+[
+  {
+    "Employee ID": "EMP-1001",
+    "Full Name": "Jane Doe",
+    "Department": "Engineering",
+    "Role": "Senior Developer",
+    "Salary": 115000,
+    "Hire Date": "2021-03-15",
+    "Active": true
+  },
+  {
+    "Employee ID": "EMP-1002",
+    "Full Name": "Marcus Chen",
+    "Department": "Marketing",
+    "Role": "Growth Lead",
+    "Salary": 92000,
+    "Hire Date": "2022-07-01",
+    "Active": true
+  },
+  {
+    "Employee ID": "EMP-1003",
+    "Full Name": "Sarah Al-Mansoor",
+    "Department": "Sales",
+    "Role": "Account Executive",
+    "Salary": 88000,
+    "Hire Date": "2020-11-20",
+    "Active": false
+  },
+  {
+    "Employee ID": "EMP-1004",
+    "Full Name": "Liam O'Connor",
+    "Department": "Product",
+    "Role": "Product Manager",
+    "Salary": 108000,
+    "Hire Date": "2023-01-10",
+    "Active": true
+  }
+]
