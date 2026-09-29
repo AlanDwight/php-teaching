@@ -1,0 +1,589 @@
+Database -> tables -> rows, columns
+
+create database myDB;
+
+use myDB;
+drop database myDB;
+alter database myDB read only = 1; // read only mode
+alter database myDB read only = 0; 
+
+execute shortcut ctrl + enter
+
+
+	#	Time	Action	Message	Duration / Fetch
+3	1	15:38:21	CREATE DATABASE myDB	1 row(s) affected	0.016 sec
+3	2	15:39:46	USE myDB	0 row(s) affected	0.000 sec
+3	3	15:40:10	DROP DATABASE myDB	0 row(s) affected	0.015 sec
+3	4	15:40:20	CREATE DATABASE myDB	1 row(s) affected	0.016 sec
+3	5	15:42:14	ALTER DATABASE myDB READ ONLY = 1	1 row(s) affected	0.015 sec
+0	6	15:42:41	DROP DATABASE myDB	Error Code: 3989. Schema 'mydb' is in read only mode.	0.000 sec
+0	7	15:43:25	ALTER DATABASE myDB RAED ONLY = 0	Error Code: 1064. You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'RAED ONLY = 0' at line 1	0.000 sec
+3	8	15:43:40	ALTER DATABASE myDB READ ONLY = 0	1 row(s) affected	0.016 sec
+3	9	15:44:04	DROP DATABASE myDB	0 row(s) affected	0.000 sec
+3	10	15:44:21	CREATE DATABASE myDB	1 row(s) affected	0.016 sec
+
+CREATE TABLE employees (
+	employee_id INT, 
+    first_name varchar(50),
+    last_name varchar(50),
+    hourly_pay decimal(5,2),	
+    hire_date date
+);
+
+--------------------------------------------------------
+
+select * from employees; 
+
+rename tables workers to employees; 
+
+drop table employees; 
+
+ALTER table employees add phone_number varchar(15);    // add new column to table
+
+alter table employees rename column phone_number to email; // change column name to new one
+
+alter table employees modify column email varchar(100); // change columns properties
+
+alter table employees modify email varchar(100) after last_name;   // change columns position
+
+alter table employees modify email varchar(100) first; // change columns position to first column
+
+alter table employees drop column email;    // drop column
+
+insert into employees values(          // inserting row into table
+	1, 
+    "win kyaw",
+    "phyo",
+    "winkyawphyo78@gmail.com",
+    20.5, 
+    "2025-01-01"
+);
+
+insert into employees values (),(),(); // inserting multiple rows 
+
+insert into employees (employee_id, first_name, last_name) value (5, "htin paw", "Oo");   // specific columns entries 
+
+select * from employess;    // get all columns and rows from specify table
+
+--------------------------------------------------------
+// conditional queries
+
+SELECT first_name, last_name FROM employees WHERE employee_id = 2; 
+
+SELECT first_name, last_name FROM employees WHERE hourly_pay > 2;
+
+SELECT first_name, last_name FROM employees WHERE employee_id != 1; 
+
+SELECT * FROM employees WHERE hire_date IS NULL;
+
+SELECT * FROM employees WHERE hire_date IS NOT NULL;
+
+--------------------------------------------------------
+
+// updating row
+
+UPDATE employees SET hourly_pay = 40.25, hire_date = "2025-12-05" WHERE first_name = "Shin Nyein";
+
+update employess set hourly_pay =  10.25; // updating every row (careful)
+
+// deleting row
+
+delete from employees;   // delete every row (careful)
+
+DELETE FROM employees WHERE employee_id = 1 ; 
+
+--------------------------------------------------------
+// autocommit ,commit, rollback
+
+SET AUTOCOMMIT = OFF; // default
+
+COMMIT; // add save point
+
+ROLLBACK; // rollback to save point
+
+--------------------------------------------------------
+
+create table datetimetable (
+	today_date date, 
+	today_time time, 
+	today_date_time datetime); 
+
+
+insert into datetimetable values (
+	 current_date(),
+  	 current_time(),
+   	 now()
+); 
+
+insert into datetimetable values (   //   current_date() + 1  = tomorrow 
+	 current_date() + 1 ,      //   current_date() - 1  = yesterday
+  	 current_time(),
+   	 now()
+); 
+
+--------------------------------------------------------
+
+// unique constraint
+
+create table products (product_id int, product_name varchar(100) unique, product_price decimal(4,2));   // product name has to be unique
+--------------------------------------------------------
+
+unique
+
+alter table products add constraint unique(product_name);   // adding unique constraint after column creation
+
+
+// since the table is already exist, using modify keyword to add "NOT NULL" constraint
+
+alter table products modify product_price decimal(4,2) not null; // NOT NULL constraint: the value can't be NULL, the value must exist
+
+alter table products modify item_count int not null; 
+
+insert into products values (103, "cookie", NULL) // return error
+--------------------------------------------------------
+// check constraint
+
+CREATE TABLE employees ( 
+	employee_id INT, 
+	first_name VARCHAR(50), 
+	last_name VARCHAR(50), 
+	hourly_pay DECIMAL(5, 2), 
+	hire_date DATE, 
+	CHECK (hourly_pay >= 10.00)
+
+// giving 'check constraint' a name
+
+create table workers (
+	worker_id int, 
+   	 worker_name varchar(100), 
+   	 worker_wage decimal(5,2)
+	constraint chk_worker_wage check(worker_wage > 10)
+); 
+
+
+alter table workers add constraint chk_worker_wage check(worker_wage > 10 );
+
+// insert a row that has low worker_wage than 10, return error
+
+
+// delete a check
+alter table workers drop check chk_worker_wage; 
+
+--------------------------------------------------------
+// set default "default constraint"
+
+
+create table workers (
+	worker_id int, 
+        worker_name varchar(100), 
+        worker_wage decimal(5,2) DEFAULT 0.00
+
+); 
+
+alter table workers alter worker_wage set default 0.00; 
+
+alter table Car alter price set default 0.00;  
+
+insert into workers (worker_id, worker_name) values (
+	3, 
+	"Lin Khant"
+) 
+
+
+create table TransactionLog (
+	transaction_id INT, 
+    	transaction_amount decimal(10,2), 
+    	transaction_date_time DATETIME DEFAULT NOW()
+); 
+
+INSERT INTO transactions (transaction_id, amount) 2 VALUES (1, 4.99);
+drop table transactions;
+
+--------------------------------------------------
+//primary key constraint // apply to a column // must be unique and not null // only have one primary key per table 
+// unique identifier
+
+create table userData (
+	user_id int primary key,
+    	user_name varchar(50), 
+   	user_age int
+);
+
+alter table userdata add constraint primary key(user_id); // add primary key into existing table
+
+select amount from transactions where transaction_id = 1003; // refunding to customer
+--------------------------------------------------
+// auto_increment
+// can be applied to the column that set as a primary key
+
+create table transactions(
+	transaction_id int primary key auto_increment, // auto_increment of first entry default to 1
+    	amount decimal(7,2),
+    	t_time  datetime
+    
+);
+
+INSERT INTO transactions (amount) VALUES (4.99); 
+SELECT * FROM transactions;
+
+alter table transactions auto_increment=1000; 
+
+--------------------------------------------------------
+
+// foreign key
+
+CREATE TABLE customers ( customer_id INT PRIMARY KEY AUTO_INCREMENT, first_name VARCHAR(50), last_name VARCHAR(50) );
+
+create table transactions (
+	transaction_id int primary key auto_increment, 
+    	transaction_amount decimal(8,2), 
+    	transaction_time datetime, 
+    	customer_id int, 
+    	foreign key(customer_id) references customers(customer_id)
+); 
+
+
+alter table transactions drop foreign key transactions_ibfk_1;   // dropping foreign key
+
+alter table transactions add constraint fk_customer_id foreign key(customer_id) references customers(customer_id); // add foreign key to existing table and give it a customized name
+
+--------------------------------------------------------
+
+// inner join, left join, right join 
+
+// join on foreign key from first table with primary key from second table 
+
+select * from transactions inner join customers on transactions.customer_id = customers.customer_id;   
+
+select transaction_id, transaction_amount, first_name,last_name from transactions inner join customers on transactions.customer_id = customers.customer_id;
+
+// left join // show all data from left table 
+
+select * from transactions left join customers on transactions.customer_id = customers.customer_id;
+
+// right join // show all data from right table 
+
+select * from transactions right join customers on transactions.customer_id = customers.customer_id;
+
+--------------------------------------------------------
+
+// Function 
+
+select count(transaction_amount) from transactions where transaction_time>"2025-11-26 00:00:00";
+select count(transaction_amount) as count from transactions where transaction_time>"2025-11-26 00:00:00";
+sum()
+select avg(transaction_amount) from transactions;
+select max(transaction_amount) from transactions;
+select min(transaction_amount) from transactions;
+select max(transaction_amount) from transactions;
+select min(transaction_amount) as "minium value" from transactions;
+select min(transaction_amount) as minium from transactions;
+select concat(first_name," ", last_name) as full_name from buyerlist;
+
+--------------------------------------------------------
+
+// logical operators 
+
+ALTER TABLE employees ADD COLUMN job VARCHAR(25) AFTER hourly_pay;
+
+select * from employees where hire_date <= "2025-02-05";
+
+select * from employees where hire_date > "2024-02-05";
+
+
+select * from employees where occupation="Junior Engineer";
+
+select * from employees where NOT occupation="Junior Engineer";
+
+select * from employees where occupation="Junior Engineer" or occupation = "English Teacher";
+
+select * from employees where occupation="Junior Engineer" and hire_date = "2025-02-05";
+
+select * from employees where occupation in ("Senior Engineer", "English Teacher");
+
+select * from employees where hire_date between "2025-01-01" and "2025-03-01";
+
+--------------------------------------------------------
+
+// wild cards character "% _"
+
+// wild card characters % used to substitute one or more characters in a string
+
+select * from employees where occupation like "%Engineer";
+
+select * from employees where occupation like "_u%";
+
+select * from employees where hire_date like "2025-02-__";
+
+select * from employees where hire_date like "____-__-05";
+
+select * from employees where hire_date like "____-02-__";
+
+--------------------------------------------------------
+
+// order by asc desc
+// asc is default
+
+select * from itemtransactions order by item_id desc;
+
+select * from itemtransactions order by consumer_id, item_id desc; 
+
+select * from itemtransactions inner join consumers on itemtransactions.consumer_id = consumers.consumer_id order by item_id desc; 
+
+--------------------------------------------------------
+// limit 
+
+//LIMIT clause is used to limit the number of records. Useful if you're working with a lot of data. Can be used to display a large data on pages (pagination).
+
+select * from storagelist inner join storageunitlist on storagelist.storage_unit_id = storageunitlist.unit_id limit 1 ;
+
+select * from storagelist inner join storageunitlist on storagelist.storage_unit_id = storageunitlist.unit_id limit 5,5 ;
+
+// limit offset // feature for pagination
+
+select * from customers limit 1,1;  // offset by 1 
+
+select * from customers limit 2,1; // offset by 2
+
+select * from customers limit 3,1; // offset by 3
+
+--------------------------------------------------------
+//union operator 
+// UNION combines the results of two or more SELECT statements
+
+// union (tables have to be same number of columns)
+
+select item_name, price from storagelist union select unit_id, unit_name from storageunitlist;
+
+select item_name, price from storagelist union all select unit_id, unit_name from storageunitlist;
+// union all 
+
+include all duplicate entries
+--------------------------------------------------------
+
+// self-join of two tables
+// SELF JOIN 
+// join another copy of a table to itself used to compare rows of the same table helps to display a heirarchy of data 
+
+select a.customer_id, a.first_name, a.last_name, concat(b.first_name, " ",b.last_name) as "referrer" 
+from customers as a 
+left join 
+customers as b 
+on a.referral_customer_id = b.customer_id ; 
+
+select a.customer_id, a.first_name, a.last_name, concat(b.first_name, " ",b.last_name) as "referrer" 
+from customers as a 
+inner join 
+customers as b 
+on a.referral_customer_id = b.customer_id ; 
+
+select a.employee_id, concat(a.first_name," " ,a.last_name) as "Full name", a.occupation as "Employee Role" , concat(b.first_name," ", b.last_name) as "Supervisor", b.occupation as "Supervisor Role" 
+from employees as a 
+inner join 
+employees as b 
+on a.supervisor_id = b.employee_id order by employee_id; 
+
+--------------------------------------------------------
+
+// view
+
+//Views a virtual table based on the result-set of an SQL statement The fields in a view are fields from one or more real //tables in the database They're not real tables, but can be interacted with as if they were 
+
+create view employees_list as select first_name, last_name from employees;
+
+select * from employees_list order by last_name asc;
+
+drop view employees_list;
+
+--------------------------------------------------------
+
+// INDEX (BTree data structure)
+
+INDEX (BTree data structure) Indexes are used to find values within a specific column more quickly MySQL normally searches sequentially through a column The longer the column, the more expensive the operation is UPDATE takes more time, SELECT takes less time
+
+show indexes from customers; // show existing indexes
+
+create index last_name_index on customers(last_name); // creating new index for last_name column
+
+create index customers_last_first_name_index on employees(last_name, first_name);  // multi column index
+
+alter table customers drop index last_name_index; // drop index
+--------------------------------------------------------
+
+// subquery (pretty complicated)
+
+// a query inside a query
+
+--subquery --a query within another query --query(subquery)
+
+select first_name, last_name, hourly_pay, (select avg(hourly_pay) from employees) as "average hourly pay"  from employees;
+
+select first_name, last_name, hourly_pay from employees where hourly_pay > (select avg(hourly_pay) from employees); 
+
+select distinct consumer_id from itemtransactions where consumer_id is not null; // distinct to filter out any duplicates
+
+select first_name, last_name from customers where customer_id in 
+(select distinct consumer_id from itemtransactions where consumer_id is not null);
+
+--------------------------------------------------------
+
+// Group by
+
+// GROUP BY = aggregate all rows by a specific column often used with aggregate functions ex. SUM(), MAX(), MIN(), AVG(), COUNT()
+
+select sum(item_price), order_date from salelist group by order_date; 
+
+select count(item_price), customer_id from salelist group by customer_id having count(item_price) > 1 ; 
+// if use group by, only use having
+
+--------------------------------------------------------
+
+// Rollup 
+ROLLUP, extension of the GROUP BY clause produces another row and shows the GRAND TOTAL (super-aggregate value)
+
+select sum(item_price) , order_date from salelist group by order_date with rollup; 
+
+select sum(hourly_pay), occupation from employees group by occupation with rollup ;
+
+select sum(hourly_pay) as "hourly pay", first_name from employees group by first_name with rollup;
+
+--------------------------------------------------------
+
+ON DELETE SET NULL
+ 
+ON DELETE SET NULL When a FK is deleted, replace FK with NULL 
+ON DELETE CASCADE  When a FK is deleted, delete row
+
+ON DELETE CASCADE
+
+set foreign_key_checks = 0; or 1 ; // to disable foreign key
+
+CREATE TABLE transactions ( transaction_id INT PRIMARY KEY, amount DECIMAL(5, 2), customer_id INT, order_date DATE, FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE SET NULL );
+
+alter table studentlist drop foreign key studentlist_ibfk_1; 
+
+alter table studentlist add constraint student_major_fkey foreign key(student_major_id) references majorlist (major_id) on delete set null ; // on delete set null
+
+alter table studentlist add constraint student_major_fkey foreign key(student_major_id) references majorlist(major_id) on delete cascade;  // on delete , remove entire row
+
+--------------------------------------------------------
+
+// stored procedure 
+
+Stored procedure = is prepared SQL code that you can save great if there's a query that you write often
+
+delimiter $$  // change delimiter temporary
+
+create procedure student_major_list()
+
+Begin 
+select student_name, student_age, major_name from studentlist inner join majorlist on studentlist.student_major_id = majorlist.major_id order by student_id;  
+end$$
+
+delimiter ; // change it back
+
+
+call student_major_list();
+
+delimiter $$ 
+create procedure find_student(in s_name varchar(100))
+
+begin
+select * from studentlist where student_name = s_name; 
+end$$
+delimiter ; 
+
+call find_student("Win");
+
+delimiter $$
+
+create procedure find_student_detail(in s_name varchar(100), in s_age int)
+begin
+select * from studentlist where student_name = s_name and student_age = s_age; 
+end$$
+
+delimiter ; 
+
+call find_student_detail("Win", 30);
+
+
+drop procedure find_student_detail; // drop stored procedure
+
+Stored procedure = is prepared SQL code that you can save great if there's a query that you write often reduces network traffic increases performance secure, admin can grant permission to use increases memory usage of every connection
+
+--------------------------------------------------------
+
+// Triggers
+// Trigger = When an event happens, do something ex. (INSERT, UPDATE, DELETE) checks data, handles errors, auditing tables
+
+
+ALTER TABLE employees 2 ADD COLUMN salary DECIMAL( 10, 2) AFTER hourly_pay; 3. SELECT * FROM employees;
+UPDATE employees SET salary = hourly_pay * 2080;  // for a year
+
+create trigger update_annual_salary  // before we update employee hourly pay
+before update on employees 
+for each row
+set new.annual_salary = new.hourly_pay * 2080;
+
+show triggers ; 
+
+update employees set annual_salary = hourly_pay * 2080; 
+
+update employees set hourly_pay = hourly_pay + 1 ;
+
+insert into employees (employee_id, first_name,last_name, occupation, email, hourly_pay, hire_date, supervisor_id) values (7, "Khin Ko", "Oo", "QA", "khinko@gmail.com", 13.14, "2025-12-25", 2);
+
+create trigger insert_annual_salary
+before insert on employees 
+for each row 
+set new.annual_salary = new.hourly_pay * 2080; 
+
+CREATE TABLE expenses (
+expense_id INT PRIMARY KEY,
+expense_name VARCHAR(50),
+expense_amount DECIMAL(10, 2)
+
+);
+
+
+update expanses set expanse_amount = (select sum(annual_salary) from employees ) where expanse_type = "salaries";
+
+// trigger about: when employee got fire, deduct total expanse from expanses table 
+
+create trigger modify_expanse_amount_on_delete_employee      
+after delete on employees 
+for each row 
+update expanses 
+set expanse_amount = expanse_amount - old.annual_salary
+where expanse_type = "salaries"; 
+
+// trigger about: when employee got hire, increase total expanse in expanses table 
+
+create trigger modify_add_on_expanse_amount_after_update_on_employees
+after insert on employees 
+for each row 
+update expanses 
+set expanse_amount = expanse_amount + new.annual_salary 
+where expanse_type = "salaries" ; 
+
+drop trigger modify_add_on_expanse_amount_after_update_on_employees;
+
+
+// trigger about: when there is a change in employee salary, increase or decrease total expanse in the expanses table 
+
+create trigger modify_expanse_amount_on_salary_change
+after update on employees 
+for each row 
+update expanses 
+set expanse_amount = expanse_amount + (new.annual_salary - old.annual_salary) 
+where expanse_type = "salaries"; 
+
+select * from expanses  ; 
+
+drop trigger modify_expanse_amount_on_salary_change;
+
+update employees 
+set hourly_pay = hourly_pay + 1 
+where employee_id = 7 ; 
+
+select * from expanses  ; 
